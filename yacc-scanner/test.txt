@@ -1,0 +1,17 @@
+import java.util.*;
+
+class Sukhad {
+	
+	int a;
+	float b;
+	String c;
+	char d;
+
+	Sukhad()
+	{
+		a = 51;
+		b = 2.11;
+		c = "sukhad";
+		d = 'a';
+	}
+}

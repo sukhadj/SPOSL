@@ -1,0 +1,11 @@
+package com.sukhad;
+
+
+
+public class SJF {
+	
+	public void main(String args[])
+	{
+		
+	}
+}

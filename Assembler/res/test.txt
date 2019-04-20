@@ -1,0 +1,18 @@
+	start	101
+	read	N
+	mover	breg,	one
+	movem	breg,	trm
+AG	mult	breg,	trm
+	mover	creg,	trm
+	add	creg,	one
+	movem	creg,	trm
+	comp	creg,	N
+	bc	le,	AG
+	movem	breg,	res
+	print	res
+	stop
+N	ds	1
+res	ds	1
+one	dc	'1'
+trm	ds	1
+	end

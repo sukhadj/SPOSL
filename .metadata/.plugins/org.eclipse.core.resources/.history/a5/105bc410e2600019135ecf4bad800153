@@ -1,0 +1,38 @@
+package com.sukhad;
+
+import java.util.*;
+
+// has all machine opcodes
+public class MachineOpcodes {
+
+	HashMap<String, String> AD;
+	HashMap<String, String> IS;
+	HashMap<String, String> DS;
+	
+	MachineOpcodes()
+	{
+		AD = new HashMap<String, String>();
+		AD.put("START", "01");
+		AD.put("END","02");
+		AD.put("ORIGIN","03");
+		AD.put("EQU","04");
+		AD.put("LTORG","05");
+		
+		IS = new HashMap<String, String>();
+		IS.put("STOP", "00");
+		IS.put("ADD", "01");
+		IS.put("SUB", "02");
+		IS.put("MUL", "03");
+		IS.put("DIV", "04");
+		IS.put("MOVER", "05");
+		IS.put("MOVEM","06");
+		IS.put("COMP", "07");
+		IS.put("BC", "08");
+		IS.put("READ", "09");
+		IS.put("PRINT", "10");
+		
+		DS = new HashMap<String, String>();
+		DS.put("DS", "01");
+		DS.put("DC","01");
+	}
+}

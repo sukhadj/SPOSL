@@ -1,0 +1,34 @@
+package com.sukhad;
+
+import java.io.*;
+import java.util.*;
+
+public class Pass2 {
+
+	ArrayList<MNT_Entry> MNT;
+	ArrayList<String> intermediate_code;
+	HashMap<String, String> posVsAct;
+	
+	String output;
+	
+	public void read_input(File mnt, File mdt, File ic)
+	{
+		try {
+			BufferedReader mntr = new BufferedReader(); 
+		}catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
+	
+	public static void main(String args[])
+	{
+		String RES_DIR = "/home/sukhad/Workspace/College/SPOS/Macro/res/";
+		
+		File mnt = new File(RES_DIR+"mnt.txt");
+		File mdt = new File(RES_DIR+"mdt.txt");
+		File ic = new File(RES_DIR+"ic.txt");
+
+		
+	}
+}

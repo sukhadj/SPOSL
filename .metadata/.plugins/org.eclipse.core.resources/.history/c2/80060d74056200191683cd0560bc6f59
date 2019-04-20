@@ -1,0 +1,28 @@
+package com.sukhad;
+
+
+class Process implements Comparable
+{
+	String name;
+	int arrival_time;
+	int burst_time;
+	int tw;
+	int tat;
+	
+	@Override
+	public int compareTo(Object arg0) {
+		// TODO Auto-generated method stub
+			
+		return 0;
+	}
+
+}
+
+public class SJF {
+	
+	
+	public void main(String args[])
+	{
+		
+	}
+}

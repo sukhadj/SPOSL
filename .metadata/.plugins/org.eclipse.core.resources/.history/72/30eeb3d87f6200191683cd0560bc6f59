@@ -1,0 +1,31 @@
+package com.sukhad;
+
+class Proc
+{
+	String name;
+	int burst_time;
+	int tw;
+	int tat;
+	int remaining_burst;
+	
+	public Proc(String name, int burst_time) {
+		super();
+		this.name = name;
+		this.burst_time = burst_time;
+		this.tw = 0;
+		this.tat = 0;
+		this.remaining_burst = this.burst_time;
+	}
+
+	@Override
+	public String toString() {
+		return "Proc [name=" + name + ", burst_time=" + burst_time + ", tw=" + tw + ", tat=" + tat + "]";
+	}
+	
+	
+	
+}
+
+public class RoundRobin {
+
+}

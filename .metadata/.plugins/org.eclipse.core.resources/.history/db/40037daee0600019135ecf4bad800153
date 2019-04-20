@@ -1,0 +1,6 @@
+package com.sukhad;
+
+public class MachineOpcodes {
+
+	HashMap<String>
+}

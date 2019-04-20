@@ -1,0 +1,185 @@
+package com.sukhad;
+
+import java.util.*;
+
+class Process implements Comparable<Process>
+{
+	String name;
+	int arrival_time;
+	int burst_time;
+	int tw;
+	int tat;
+	int remaining_burst;
+	int last_visited;
+	
+	public Process(String name, int arrival_time, int burst_time) {
+		super();
+		this.name = name;
+		this.arrival_time = arrival_time;
+		this.burst_time = burst_time;
+		this.tw = 0;
+		this.tat = 0;
+		this.remaining_burst = this.burst_time;
+		this.last_visited = 0;
+	}
+
+	@Override
+	public int compareTo(Process process) {
+	
+		if(this.remaining_burst > process.remaining_burst)
+		{
+			return 1;
+		}
+		else if(this.remaining_burst < process.remaining_burst)
+		{
+			return -1;
+		}
+		return 0;
+	}
+
+	@Override
+	public String toString() {
+		return "Process [name=" + name + ", arrival_time=" + arrival_time + ", burst_time=" + burst_time + ", tw=" + tw
+				+ ", tat=" + tat + "]";
+	}
+	
+	
+	
+
+}
+
+public class SJF {
+	
+	ArrayList<Process> processes;
+	int num_processes;
+	PriorityQueue<Integer> mileStones;
+	
+	SJF()
+	{
+		processes = new ArrayList<>();
+		this.mileStones = new PriorityQueue<>();
+	}
+
+	
+	public void get_processes()
+	{
+		Scanner sc = new Scanner(System.in);
+		System.out.println("Enter the number of processes:");
+		this.num_processes = sc.nextInt();
+		
+		String name;
+		int arrival_time, burst_time;
+		
+		System.out.println("Enter the process name, arrival time and burst time");
+		
+		for(int i=0;i<num_processes;i++)
+		{
+			name = sc.next();
+			arrival_time = sc.nextInt();
+			burst_time = sc.nextInt();
+			
+			if(!this.mileStones.contains(arrival_time))
+			{
+				// add all the different arrival times
+				this.mileStones.add(arrival_time);
+			}
+			this.processes.add(new Process(name,arrival_time,burst_time));
+		}
+	}
+	
+	public void display()
+	{
+		for(Process p : this.processes)
+		{
+			System.out.println(p);
+		}
+		
+		for(int i : this.mileStones)
+		{
+			System.out.println(i);
+		}
+	}
+
+	private void add_jobs_queue(PriorityQueue<Process> jobs, int stop)
+	{
+		// adds all the jobs having arrival time equal to stop
+		for(Process p : this.processes)
+		{
+			if(p.arrival_time==stop)
+			{
+				jobs.add(p);
+			}
+		}
+	}
+
+	public void schedule()
+	{
+		PriorityQueue<Process> jobs = new PriorityQueue<Process>();
+		
+		int stop = this.mileStones.peek();
+		int current_time = 0;
+		
+		while(!this.processes.isEmpty())
+		{
+			if(current_time==stop)
+			{
+				// time to add new jobs and change queue accordingly
+				this.add_jobs_queue(jobs, stop);
+			}
+			
+			if(this.mileStones.isEmpty())
+			{
+				// all process are there - safe to execute normally
+				break;
+			}
+			
+			stop = this.mileStones.peek();
+			
+			Process p = jobs.poll();
+			if(current_time+p.remaining_burst<=stop)
+			{
+				System.out.println("Executing-"+p.name+"for-"+p.remaining_burst);
+				// safe to execute completely
+				p.tw += current_time - p.arrival_time;
+				p.tat = p.tw + p.burst_time;
+				
+				current_time = current_time + p.remaining_burst;
+				this.processes.remove(p);
+			}
+			else
+			{
+				System.out.println("Executing-"+p.name+"for-"+(stop-current_time));
+				p.remaining_burst -= stop-current_time;
+				
+				p.tw += current_time - p.last_visited;
+				current_time = stop;
+				p.last_visited = current_time;
+				
+				jobs.add(p);
+			}
+			
+		}
+		
+		while(!jobs.isEmpty())
+		{
+			p = 
+			System.out.println("Executing-"+p.name+"for-"+p.remaining_burst);
+			// safe to execute completely
+			p.tw += current_time - p.arrival_time;
+			p.tat = p.tw + p.burst_time;
+			
+			current_time = current_time + p.remaining_burst;
+			this.processes.remove(p);
+
+		}
+		
+	}
+	
+	public static void main(String args[])
+	{
+		SJF sjf = new SJF();
+		sjf.get_processes();
+		sjf.display();
+		sjf.schedule();
+	}
+}

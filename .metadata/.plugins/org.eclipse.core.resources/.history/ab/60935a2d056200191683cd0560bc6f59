@@ -1,0 +1,18 @@
+package com.sukhad;
+
+
+class Process
+{
+	String name;
+	int arrival_time;
+}
+
+public class SJF {
+	
+	
+	
+	public void main(String args[])
+	{
+		
+	}
+}

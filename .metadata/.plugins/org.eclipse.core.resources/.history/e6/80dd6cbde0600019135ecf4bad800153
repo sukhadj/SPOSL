@@ -1,0 +1,9 @@
+package com.sukhad;
+
+import java.util.*;
+
+public class MachineOpcodes {
+
+	HashMap<String, String> AD;
+	
+}

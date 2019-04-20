@@ -1,0 +1,12 @@
+package com.sukhad;
+
+import java.util.*;
+
+// has all machine opcodes
+public class MachineOpcodes {
+
+	HashMap<String, String> AD;
+	HashMap<String, String> IS;
+	HashMap<String, String> DS;
+	
+}

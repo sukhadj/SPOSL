@@ -1,0 +1,16 @@
+package com.sukhad;
+
+import java.io.File;
+
+public class Pass2 {
+
+	public static void main(String args[])
+	{
+		
+		
+		File mnt = new File(RES_DIR+"mnt.txt");
+		File mdt = new File(RES_DIR+"mdt.txt");
+		File ic = new File(RES_DIR+"ic.txt");
+
+	}
+}

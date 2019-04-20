@@ -1,0 +1,405 @@
+package com.sukhad;
+
+import java.io.*;
+import java.util.*;
+
+// inputs : machine opcode table, source code
+// outputs : symTab, litTab
+// using variant-2
+
+class Instruction
+{
+	String label;
+	String mne;
+	String op1;
+	String op2;
+	
+	public Instruction()
+	{
+		this.label = null;
+		this.mne = null;
+		this.op1 = null;
+		this.op2 = null;
+	}
+	
+	public Instruction(String label, String mne, String op1, String op2) {
+		this.label = label;
+		this.mne = mne;
+		this.op1 = op1;
+		this.op2 = op2;
+	}
+
+	@Override
+	public String toString() {
+		return "Instruction [label=" + label + ", mne=" + mne + ", op1=" + op1 + ", op2=" + op2 + "]";
+	}
+
+}
+
+class Symbol
+{
+	String symbol;
+	int address;
+	
+	Symbol()
+	{
+		this.symbol = "";
+		this.address = -1;
+	}
+	
+
+	Symbol(String symbol, int address)
+	{
+		this.symbol = symbol;
+		this.address = address;
+	}
+
+	@Override
+	public String toString() {
+		return "Symbol [symbol=" + symbol + ", address=" + address + "]";
+	}
+
+}
+
+class Literal
+{
+	String literal;
+	int address;
+	
+	Literal()
+	{
+		this.literal = "";
+		this.address = -1;
+	}
+	
+	Literal(String literal, int address)
+	{
+		this.literal = literal;
+		this.address = address;
+	}
+
+	void setAddress(int addr)
+	{
+		this.address = addr;
+	}
+
+	@Override
+	public String toString() {
+		return "Literal [literal=" + literal + ", address=" + address + "]";
+	}
+	
+}
+
+
+public class Pass1 {
+
+	ArrayList<String> source_code;
+	MachineOpcodes mop;
+	
+	String intermediate_code;
+	ArrayList<Symbol> symTab;
+	ArrayList<Literal> litTab;
+	
+	ArrayList<Integer> poolTab;
+	
+	int lc;
+	
+	Pass1()
+	{
+		this.source_code = new ArrayList<String>();
+		this.mop = new MachineOpcodes();
+		
+		this.intermediate_code = "";
+		this.symTab = new ArrayList<Symbol>();
+		this.litTab = new ArrayList<Literal>();
+		
+		this.poolTab = new ArrayList<Integer>();
+		this.poolTab.add(0);
+		
+		this.lc = 0;
+	}
+	
+	// generate array of instructions
+	private void parse_code(ArrayList<Instruction> instructions)
+	{
+		for(String line : this.source_code)
+		{
+			String[] splits = line.split("\\s+");
+			
+			Instruction inst = new Instruction();
+			
+			if(splits[0].compareTo("")!=0)
+			{
+				inst.label = splits[0];
+			}
+		
+			inst.mne = splits[1];
+			
+			if(splits.length == 4)
+			{
+				// 2 ops exist
+				inst.op1 = splits[2];
+				inst.op2 = splits[3];
+			}
+			else if(splits.length == 3)
+			{
+				// only one operand
+				inst.op1 = splits[2];
+			}
+			
+			System.out.println(inst);
+			instructions.add(inst);
+		}
+		
+	}
+	
+	private void handle_opcodes(Instruction instr)
+	{
+		if(instr.op1!=null && this.mop.REG.containsKey(instr.op1.split(",")[0]))
+		{
+			this.intermediate_code +=  "("+"REG,"+mop.REG.get(instr.op1.split(",")[0])+")"+"\t";
+		}
+		
+		else if(instr.op1!=null && instr.op1.matches("^='[0-9]+'$"))
+		{
+			String lit = instr.op1.split("'")[1];
+			this.intermediate_code += instr.op1;
+			this.litTab.add(new Literal(lit, -1));
+		}
+		else if(instr.op1!=null){
+			this.intermediate_code += instr.op1; 
+		}
+		
+		if(instr.op2!=null && this.mop.REG.containsKey(instr.op2.split(",")[0]))
+		{
+			this.intermediate_code +=  "("+"REG,"+mop.REG.get(instr.op2.split(",")[0])+")"+"\t";
+		}
+		else if(instr.op2!=null && instr.op2.matches("^='[0-9]+'$"))
+		{
+			String lit = instr.op2.split("'")[1];
+			this.intermediate_code += instr.op2;
+			this.litTab.add(new Literal(lit, -1));
+		}
+		else if(instr.op2!=null){
+			this.intermediate_code += instr.op2;
+		}
+
+	}
+	
+	private void handle_AD(Instruction instr)
+	{
+		this.intermediate_code += "("+"AD,"+mop.AD.get(instr.mne)+")";
+		if(instr.mne.compareTo("START")==0 || instr.mne.compareTo("ORIGIN")==0)
+		{
+			
+			this.handle_opcodes(instr);
+		
+			if(instr.op1.matches("^[0-9]+$"))
+			{
+				// operand is numerical
+				this.lc = Integer.parseInt(instr.op1);
+			}
+			else if(instr.op1.contains("+"))
+			{
+				String[] splits = instr.op1.split("\\+");
+				for(Symbol sym: this.symTab)
+				{
+					if(sym.symbol.compareTo(splits[0])==0)
+					{
+						this.lc = sym.address + Integer.parseInt(splits[1]);
+					}
+				}
+			}
+			else
+			{
+				String[] splits = instr.op1.split("-");
+				for(Symbol sym: this.symTab)
+				{
+					if(sym.symbol.compareTo(splits[0])==0)
+					{
+						this.lc = sym.address - Integer.parseInt(splits[1]);
+					}
+				}
+
+			}
+			
+			return;
+		}
+		
+		if(instr.mne.compareTo("LTORG")==0)
+		{
+			this.handle_opcodes(instr);
+			// get last element of 
+			int index = this.poolTab.get(this.poolTab.size()-1);
+			
+			for(int i=index;i<this.litTab.size();i++)
+			{
+				this.litTab.get(i).setAddress(lc);
+				lc += 1;
+//				intermediate_code += "='"+this.litTab.get(i).literal+"'"+"\n";
+			}
+			this.poolTab.add(this.litTab.size());
+			
+			return;
+		}
+				
+		if(instr.mne.compareTo("EQU")==0)
+		{
+			this.handle_opcodes(instr);
+			Symbol lastSym = this.symTab.get(this.symTab.size()-1);
+			if(instr.op1.contains("+"))
+			{
+;
+				String[] splits = instr.op1.split("\\+");
+				for(Symbol sym: this.symTab)
+				{
+					if(sym.symbol.compareTo(splits[0])==0)
+					{
+						lastSym.address = sym.address + Integer.parseInt(splits[1]);
+					}
+				}
+			}
+			else
+			{
+				String[] splits = instr.op1.split("-");
+				for(Symbol sym: this.symTab)
+				{
+					if(sym.symbol.compareTo(splits[0])==0)
+					{
+						this.lc = sym.address - Integer.parseInt(splits[1]);
+					}
+				}
+				
+			}
+		}
+		
+	}
+	
+	private  void handle_IS(Instruction instr)
+	{
+		this.intermediate_code += "("+"IS,"+this.mop.IS.get(instr.mne)+")";
+		this.handle_opcodes(instr);
+		this.lc += 1; 
+	}
+	
+	private void handle_DS(Instruction instr)
+	{
+		if(instr.mne.compareTo("DS")==0)
+		{
+			this.lc = this.lc + Integer.parseInt(instr.op1);
+		}
+		else
+		{
+			this.lc = this.lc + 1;
+		}
+		this.intermediate_code += "(DS,"+this.mop.DS.get(instr.mne)+")";
+	}
+	
+	// read and display the code
+	public void read_code(File file)
+	{
+		String line;
+		try {
+		BufferedReader br = new BufferedReader(new FileReader(file));
+		
+		while((line = br.readLine())!=null)
+		{
+			this.source_code.add(line);
+			
+			if(line.contains(" END "))
+			{
+				break;
+			}
+		}
+		this.source_code.add(" LTORG ");
+		
+		}catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		
+		for(String inst : this.source_code)
+		{
+			System.out.println(inst);
+		}
+	}
+	
+	public void generate_pass1_op()
+	{
+		
+		ArrayList<Instruction> instructions = new ArrayList<Instruction>();
+		this.parse_code(instructions);
+		
+		for(Instruction instr : instructions)
+		{
+			// add label to symbol table
+			if(instr.label!=null)
+			{
+				this.symTab.add(new Symbol(instr.label, lc));
+			}
+			
+			// for assembly directives
+			if(this.mop.AD.containsKey(instr.mne))
+			{
+				this.handle_AD(instr);
+			}
+			else if(this.mop.DS.containsKey(instr.mne))
+			{
+				this.handle_DS(instr);
+			}
+			
+			// for imperative statements
+			else if(this.mop.IS.containsKey(instr.mne))
+			{
+				this.handle_IS(instr);	
+			}
+			
+			this.intermediate_code += "\n";
+		}
+	}
+	
+	void print_and_write(String RES_DIR)
+	{
+		try {
+		System.out.println("==============Intermediate code==========");
+		System.out.println(this.intermediate_code);
+		
+		
+		System.out.print("\n");
+
+		System.out.println("==============Symbol table==========");
+		for(Symbol sym : this.symTab)
+		{
+		//	bw.append(sym.symbol+"\t"+sym.address);
+			System.out.println(sym.symbol+"\t"+sym.address);
+		}
+
+
+		
+		System.out.print("\n");
+		
+		System.out.println("==============Literal table==========");
+		for(Literal lit : this.litTab)
+		{
+			System.out.println(lit.literal+"\t"+lit.address);
+		}
+		}catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+
+	}
+	
+	public static void main(String args[])
+	{
+		Pass1 pass1 = new Pass1();
+		String RES_DIR = "/home/sukhad/Workspace/College/SPOS/Assembler/res/";
+		File file = new File(RES_DIR+"code.txt");
+		
+		pass1.read_code(file);
+		pass1.generate_pass1_op();
+		pass1.print_and_write(RES_DIR);
+
+	}
+}
+

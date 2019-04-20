@@ -1,0 +1,71 @@
+package com.sukhad;
+
+import java.util.*;
+import java.io.*;
+
+public class Pass1 {
+	
+	ArrayList<String> source_code;
+
+	ArrayList<MNT_Entry> MNT;
+	ArrayList<String> MDT;
+	HashMap<String, String> formVsPos;
+	String intermediate_code;
+	
+	Pass1()
+	{
+		this.source_code = new ArrayList<>();
+		this.MNT = new ArrayList<>();
+		this.MDT = new ArrayList<>();
+		this.formVsPos = new HashMap<>();
+		this.intermediate_code = "";
+	}
+	
+	public void read_source_code(File file)
+	{
+		try {
+		BufferedReader br = new BufferedReader(new FileReader(file));
+	
+		String line;
+		while((line=br.readLine())!=null)
+		{
+			this.source_code.add(line);
+		}	
+		
+		}catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
+	
+	public void macro_process_pass1()
+	{
+		boolean flag = false;
+		for(String line : this.source_code)
+		{
+			if(line.contains("MACRO")) // start of the macro
+			{
+				flag = true;
+				MNT_Entry mnt_entry = new MNT_Entry();
+				
+				continue;
+			}
+			if(line.contains("MEND")) // end of macro
+			{
+				flag = false;
+				this.MDT.add(line);
+				continue;
+			}
+			if(flag)
+			{
+				this.MDT.add(line);
+			}
+		}
+	}
+	
+	public static void main(String args[])
+	{
+		String str = "MACRO ABC";
+		
+	}
+}

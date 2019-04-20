@@ -1,0 +1,120 @@
+package com.sukhad;
+
+import java.util.*;
+
+class Process1
+{
+	
+	public String name;
+	public int ts;
+	public int tw;
+	public int tat;	
+
+	public Process1(String name,int ts)
+	{
+		this.name = name;
+		this.ts = ts;
+		this.tw = 0;
+		this.tat = 0;
+	}
+	
+	public void display_process()
+	{
+		System.out.println(name+"\t"+Integer.toString(ts)+"\t"+Integer.toString(tw)+"\t"+Integer.toString(tat));
+	}
+	 
+}
+
+public class FCFS{
+	private Queue<Process1> queue = new LinkedList<Process1>();
+
+	private void get_processes()
+	{
+		// function takes the input from user
+		try{
+		Scanner sc = new Scanner(System.in);
+		System.out.println("Enter the number of processes : ");			
+		int n = sc.nextInt();		
+		System.out.println("Enter the processes name and service time for "+Integer.toString(n)+" : ");	
+		String name;
+		int ts;		
+		for(int i=0;i<n;i++)
+		{
+			// single word input name
+			System.out.print("name : ");			
+			name = sc.next();
+			//ts = 0;			
+			System.out.print("service time : ");
+			ts = sc.nextInt();
+			queue.add(new Process1(name,ts));
+		}
+		}catch(Exception e){
+			System.out.println(e);	
+		}
+				
+	}
+		
+	public void display()
+	{
+		// display all the processes
+		System.out.println("Name"+"\t"+"Ts"+"\t"+"Tw"+"\t"+"TaT");
+		while(!queue.isEmpty())
+		{
+			queue.remove().display_process();
+			
+		}
+	}
+
+	private void schedule()
+	{
+		// fuction assigns waiting time and turn around time for every process
+		int tw = 0;
+		for(Process1 pro : queue)
+		{
+			pro.tw = tw;
+			pro.tat = tw+pro.ts;
+			tw = pro.tat;
+		}
+	}
+
+	private int avg_waiting_time()
+	{
+		int avg = 0;
+		for(Process1 pro : queue)
+		{
+			avg += pro.tw;
+		}
+		avg = avg/queue.size();
+		return avg;
+	}
+
+	private int avg_tat_time()
+	{
+		int avg = 0;
+		for(Process1 pro : queue)
+		{
+			avg += pro.tat;
+		}
+		avg = avg/queue.size();
+		return avg;
+	}
+	
+	public static void main(String args[])
+	{
+		// main function
+		FCFS fcfs = new FCFS();
+		fcfs.get_processes();
+		fcfs.schedule();
+	
+		System.out.println("==================================================================");
+		
+		System.out.println("Average waiting time : "+Integer.toString(fcfs.avg_waiting_time()));
+		System.out.println("Average turn around time : "+Integer.toString(fcfs.avg_tat_time()));	
+	
+		fcfs.display();
+
+		
+				
+	}
+
+}

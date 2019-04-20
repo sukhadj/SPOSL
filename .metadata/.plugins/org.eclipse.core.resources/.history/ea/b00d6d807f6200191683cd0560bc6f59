@@ -1,0 +1,13 @@
+package com.sukhad;
+
+class Proc
+{
+	String name;
+	int burst_time;
+	int tw;
+	int tat;
+}
+
+public class RoundRobin {
+
+}

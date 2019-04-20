@@ -1,0 +1,24 @@
+package com.sukhad;
+
+import java.util.*;
+
+public class Pass1 {
+	
+	ArrayList<String> source_code;
+
+	ArrayList<MNT_Entry> MNT;
+	HashMap<String, String> MDT;
+	String intermediate_code;
+	
+	Pass1()
+	{
+		this.source_code = new ArrayList<>();
+		this.MNT = new ArrayList<>();
+		this.MDT = new HashMap<>();
+	}
+	
+	public void main(String args[])
+	{
+		
+	}
+}

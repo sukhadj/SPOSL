@@ -1,0 +1,43 @@
+package com.sukhad;
+
+import java.util.*;
+import java.io.*;
+
+public class Pass1 {
+	
+	ArrayList<String> source_code;
+
+	ArrayList<MNT_Entry> MNT;
+	HashMap<String, String> MDT;
+	String intermediate_code;
+	
+	Pass1()
+	{
+		this.source_code = new ArrayList<>();
+		this.MNT = new ArrayList<>();
+		this.MDT = new HashMap<>();
+		this.intermediate_code = "";
+	}
+	
+	public void read_source_code(File file)
+	{
+		try {
+		BufferedReader br = new BufferedReader(new FileReader(file));
+	
+		String line;
+		while((line=br.readLine())!=null)
+		{
+			this.source_code.add(line);
+		}	
+		
+		}catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
+	
+	public static void main(String args[])
+	{
+		
+	}
+}

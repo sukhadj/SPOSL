@@ -1,0 +1,17 @@
+package com.sukhad;
+
+
+class Process
+{
+	
+}
+
+public class SJF {
+	
+	
+	
+	public void main(String args[])
+	{
+		
+	}
+}

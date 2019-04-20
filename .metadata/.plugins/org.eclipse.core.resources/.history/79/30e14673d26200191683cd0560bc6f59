@@ -1,0 +1,9 @@
+package com.sukhad;
+
+public class Pass2 {
+
+	public static void main(String args[])
+	{
+		
+	}
+}

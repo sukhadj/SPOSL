@@ -1,0 +1,14 @@
+package com.sukhad;
+
+import java.util.*;
+
+public class Pass1 {
+	
+	ArrayList<MNT_Entry> MNT;
+	HashMap<String, String> MDT;
+	
+	public void main(String args[])
+	{
+		
+	}
+}

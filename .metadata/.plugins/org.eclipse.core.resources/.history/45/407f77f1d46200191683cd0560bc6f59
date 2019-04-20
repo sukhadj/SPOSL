@@ -1,0 +1,82 @@
+package com.sukhad;
+
+import java.io.*;
+import java.util.*;
+
+public class Pass2 {
+
+	ArrayList<MNT_Entry> MNT;
+	ArrayList<String> intermediate_code;
+	ArrayList<String> MDT;
+	HashMap<String, String> posVsAct;
+	
+	String output;
+	
+	Pass2()
+	{
+		this.MNT = new ArrayList<>();
+		this.MDT = new ArrayList<>();
+		this.intermediate_code = new ArrayList<>();
+		
+		this.posVsAct = new HashMap<>();
+	}
+	
+	public void read_input(File mnt, File mdt, File ic)
+	{
+		try {
+			BufferedReader mntr = new BufferedReader(new FileReader(mnt));
+			BufferedReader mdtr = new BufferedReader(new FileReader(mdt));
+			BufferedReader icr = new BufferedReader(new FileReader(ic));
+			
+			// read intermediate code
+			String line = icr.readLine(); 
+			while(line!=null)
+			{
+				System.out.println(line);
+				this.intermediate_code.add(line);
+				line = icr.readLine();
+			}
+			
+			// read mdt
+			line = mdtr.readLine(); 
+			while(line!=null)
+			{
+				System.out.println(line);
+				this.MDT.add(line);
+				line = mdtr.readLine();
+			}
+
+			// read MNT
+			line = mntr.readLine(); 
+			while(line!=null)
+			{
+				System.out.println(line);
+				String[] words = line.split("\t");
+ 				this.MNT.add(new MNT_Entry(words[0],Integer.parseInt(words[1]),Integer.parseInt(words[2])));
+				line = mntr.readLine();
+			}
+
+			
+		}catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+	}
+	
+	public void generate_output()
+	{
+		
+	}
+	
+	public static void main(String args[])
+	{
+		String RES_DIR = "/home/sukhad/Workspace/College/SPOS/Macro/res/";
+		
+		File mnt = new File(RES_DIR+"mnt.txt");
+		File mdt = new File(RES_DIR+"mdt.txt");
+		File ic = new File(RES_DIR+"ic.txt");
+
+		Pass2 pass2 = new Pass2();
+		pass2.read_input(mnt, mdt, ic);
+	}
+}

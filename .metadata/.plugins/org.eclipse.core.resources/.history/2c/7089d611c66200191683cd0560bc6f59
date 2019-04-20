@@ -1,0 +1,17 @@
+package com.sukhad;
+
+import java.util.*;
+
+public class Pass1 {
+	
+	ArrayList<String> source_code;
+
+	ArrayList<MNT_Entry> MNT;
+	HashMap<String, String> MDT;
+	String intermediate_code;
+	
+	public void main(String args[])
+	{
+		
+	}
+}

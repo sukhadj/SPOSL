@@ -1,0 +1,74 @@
+package com.sukhad;
+
+import java.util.*;
+
+import com.sukhad.Process;
+
+class Proc
+{
+	String name;
+	int burst_time;
+	int tw;
+	int tat;
+	int remaining_burst;
+	
+	public Proc(String name, int burst_time) {
+		super();
+		this.name = name;
+		this.burst_time = burst_time;
+		this.tw = 0;
+		this.tat = 0;
+		this.remaining_burst = this.burst_time;
+	}
+
+	@Override
+	public String toString() {
+		return "Proc [name=" + name + ", burst_time=" + burst_time + ", tw=" + tw + ", tat=" + tat + "]";
+	}
+	
+	
+	
+}
+
+public class RoundRobin {
+
+	ArrayList<Proc> processes; 
+	int time_slice;
+	int num_processes;
+	int num_completed;
+	
+	RoundRobin()
+	{
+		this.processes = new ArrayList<>();
+		this.time_slice = 0;
+		this.num_processes = 0;
+		this.num_completed = 0;
+	}
+	
+	public void get_processes()
+	{
+		Scanner sc = new Scanner(System.in);
+		System.out.println("Enter the number of processes:");
+		this.num_processes = sc.nextInt();
+		
+		String name;
+		int arrival_time, burst_time;
+		
+		System.out.println("Enter the process name, arrival time and burst time");
+		
+		for(int i=0;i<num_processes;i++)
+		{
+			name = sc.next();
+			arrival_time = sc.nextInt();
+			burst_time = sc.nextInt();
+			
+			this.processes.add(new Process(name,arrival_time,burst_time));
+		}
+	}
+
+	
+	public static void main(String args[])
+	{
+		
+	}
+}
